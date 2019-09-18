@@ -1,0 +1,183 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  package="com.rncallnativeadvice">
+
+    <!-- 必须要有的权限 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <!--suppress DeprecatedClassUsageInspection -->
+    <uses-permission android:name="android.permission.GET_TASKS" />
+
+    <!-- 如果有视频相关的广告且使用textureView播放，请务必添加，否则黑屏 -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- 最好能提供的权限 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <!--demo场景用到的权限，不是必须的-->
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
+
+
+    <application
+      android:name=".MainApplication"
+      android:label="@string/app_name"
+      android:icon="@mipmap/ic_launcher"
+      android:roundIcon="@mipmap/ic_launcher_round"
+      android:allowBackup="false"
+      android:theme="@style/AppTheme">
+      <activity
+        android:name=".RnActivity"
+        android:label="@string/app_name"
+        android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+        android:windowSoftInputMode="adjustResize">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+      </activity>
+
+      <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+
+        <activity
+            android:name="com.union_test.toutiao.activity.MainActivity"
+            android:configChanges="keyboard|orientation|screenSize"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.union_test.toutiao.activity.BannerActivity"
+            android:configChanges="keyboard|orientation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.union_test.toutiao.activity.NativeBannerActivity"
+            android:configChanges="keyboard|orientation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.union_test.toutiao.activity.FeedListActivity"
+            android:configChanges="keyboard|orientation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.union_test.toutiao.activity.FeedRecyclerActivity"
+            android:configChanges="keyboard|orientation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.union_test.toutiao.activity.InteractionActivity"
+            android:configChanges="keyboard|orientation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.union_test.toutiao.activity.NativeInteractionActivity"
+            android:configChanges="keyboard|orientation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.union_test.toutiao.activity.RewardVideoActivity"
+            android:configChanges="keyboard|orientation|screenSize"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.union_test.toutiao.activity.FullScreenVideoActivity"
+            android:configChanges="keyboard|orientation|screenSize"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.union_test.toutiao.activity.NativeVerticalVideoActivity"
+            android:configChanges="keyboard|orientation|screenSize"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.union_test.toutiao.activity.SplashActivity"
+            android:configChanges="keyboard|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+
+
+        <activity
+            android:name="com.union_test.toutiao.activity.DrawNativeVideoActivity"
+            android:configChanges="keyboard|orientation|screenSize"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name="com.union_test.toutiao.activity.NativeExpressActivity"
+            android:configChanges="keyboard|orientation|screenSize"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name="com.union_test.toutiao.activity.NativeExpressListActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+        <activity
+            android:name="com.union_test.toutiao.activity.InteractionExpressActivity"
+            android:configChanges="keyboard|orientation|screenSize"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name="com.union_test.toutiao.activity.BannerExpressActivity"
+            android:configChanges="keyboard|orientation|screenSize"
+            android:screenOrientation="portrait"> </activity>
+
+        <provider
+            android:name="com.bytedance.sdk.openadsdk.TTFileProvider"
+            android:authorities="${applicationId}.TTFileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <provider
+            android:name="com.bytedance.sdk.openadsdk.multipro.TTMultiProvider"
+            android:authorities="${applicationId}.TTMultiProvider"
+            android:exported="false" />
+
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/gdt_file_path" />
+        </provider>
+
+        <service android:name="com.union_test.toutiao.service.AppDownloadService" />
+
+
+        <service android:name="com.locker.service.TraceService" />
+
+        <service
+            android:name="com.locker.service.LockerService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <receiver android:name="com.locker.receiver.BootCompleteReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name="com.locker.activity.LockerActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/common_locker_screen"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+    </application>
+
+</manifest>

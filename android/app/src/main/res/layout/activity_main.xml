@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.union_test.toutiao.activity.FeedListActivity"
+    tools:ignore="HardcodedText">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btn_locker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="locker场景" />
+
+        <Button
+            android:id="@+id/btn_main_banner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="banner广告demo"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btn_main_banner_native"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="原生banner广告demo"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btn_main_banner_express"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="EXPRESS banner AD"
+            android:textSize="14sp"/>
+
+        <Button
+            android:id="@+id/btn_main_feed_lv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="feed广告demo(ListView)"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btn_main_feed_rv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="feed广告demo(RecyclerView)"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btn_mian_insert"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Interstitial AD "
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btn_main_interstitial_native"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="原生 INTERSTITIAL AD"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btn_main_interstitial_express"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="EXPRESS INTERSTITIAL AD"
+            android:textSize="14sp"/>
+
+        <Button
+            android:id="@+id/btn_mian_splash"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SPLASH"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btn_mian_reward"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="REWARD VIDEO"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btn_main_full"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="FULL_SCREEN_VIDEO"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btn_main_draw_native"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="DRAW_NATIVE_VIDEO"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btn_native_vertical_video"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="NATIVE_VERTICAL_VIDEO" />
+
+        <Button
+            android:id="@+id/btn_native_express"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="NATIVE_EXPRESS_AD" />
+        <Button
+            android:id="@+id/btn_native_express_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="NATIVE_EXPRESS_AD_LIST" />
+
+        <TextView
+            android:id="@+id/tv_version"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:ems="10"
+            android:gravity="center_horizontal"
+            android:inputType="textPersonName"
+            tools:ignore="TextViewEdits" />
+
+    </LinearLayout>
+
+</ScrollView>
+
