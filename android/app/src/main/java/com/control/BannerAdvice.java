@@ -1,11 +1,9 @@
-package com.union_test.toutiao.activity;
+package com.control;
 
-import android.app.Activity;
 import android.content.Context;
-import android.os.Bundle;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -14,59 +12,56 @@ import com.bytedance.sdk.openadsdk.TTAdDislike;
 import com.bytedance.sdk.openadsdk.TTAdNative;
 import com.bytedance.sdk.openadsdk.TTAppDownloadListener;
 import com.bytedance.sdk.openadsdk.TTBannerAd;
-import com.rncallnativeadvice.R;
+import com.rncallnativeadvice.RnActivity;
+import com.union_test.toutiao.activity.BannerActivity;
 import com.union_test.toutiao.config.TTAdManagerHolder;
 import com.union_test.toutiao.utils.TToast;
 
-import javax.annotation.Nullable;
+//第一种广告类型
+public class BannerAdvice {
 
-@SuppressWarnings("unused")
-public class BannerActivity extends Activity {
-
-    private TTAdNative mTTAdNative;
-    private FrameLayout mBannerContainer;
-    private Context mContext;
-    private TTAdDislike mTTAdDislike;
-    private Button mButtonDownload;
-    private Button mButtonLandingPage;
-
-    @SuppressWarnings("RedundantCast")
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-                | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-
-        setContentView(R.layout.activity_banner);
-        mContext = this.getApplicationContext();
-        mBannerContainer = (FrameLayout) findViewById(R.id.banner_container);
-        mButtonDownload = (Button) findViewById(R.id.btn_banner_download);
-        mButtonLandingPage = (Button) findViewById(R.id.btn_banner_landingpage);
-        mButtonDownload.setOnClickListener(mClickListener);
-        mButtonLandingPage.setOnClickListener(mClickListener);
+    private static BannerAdvice bannerAdvice;
+    private static TTAdNative mTTAdNative;
+    private static TTAdDislike mTTAdDislike;
+    private static Context context;
+    private static FrameLayout mBannerContainer;
+    //也就说RN调用的时候 这个是要执行的第一步 初始化这些东西
+    private BannerAdvice(Context context) {
+        this.context=context ;
+        mBannerContainer=new FrameLayout(context);
+        mBannerContainer.setBackgroundColor(Color.GREEN);
         //step2:创建TTAdNative对象，createAdNative(Context context) banner广告context需要传入Activity对象
-        mTTAdNative = TTAdManagerHolder.get().createAdNative(this);
+        //mTTAdNative = TTAdManagerHolder.get().createAdNative(context);
+        mTTAdNative= RnActivity.mTTAdNative ;//由于这里不需要展示视图 而上下文必须是Activity 所以这里直接放到RnActivity
         //step3:(可选，强烈建议在合适的时机调用):申请部分权限，如read_phone_state,防止获取不了imei时候，下载类广告没有填充的问题。
-        TTAdManagerHolder.get().requestPermissionIfNecessary(this);
+        TTAdManagerHolder.get().requestPermissionIfNecessary(context);
     }
 
-    @SuppressWarnings("EmptyMethod")
-    @Override
-    protected void onResume() {
-        super.onResume();
+    //暴露出一个单例对象
+    public static BannerAdvice getInstance(Context context){
+         if(bannerAdvice==null){
+             bannerAdvice=new BannerAdvice(context);
+         }
+         return bannerAdvice ;
     }
 
-    private final View.OnClickListener mClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (v.getId() == R.id.btn_banner_download) {
-                loadBannerAd("901121895");
-            } else if (v.getId() == R.id.btn_banner_landingpage) {
-                loadBannerAd("901121987");
-            }
+    //暴露Framelayout
+    public FrameLayout getBannerContainer(){
+        return mBannerContainer;
+    }
 
-        }
-    };
+    //在原生把事情做完之后 需要暴露给RN视图界面 这里是最后的逻辑
+    public  void showBannerToRn(){
+
+    }
+    //显示下载类广告 RN那边触发这种类型广告
+    public void showBannerDownload(){
+        loadBannerAd("901121895");
+    }
+    //显示落地叶的广告
+    public void showBannerLandingpage(){
+        loadBannerAd("901121987");
+    }
 
     //根据广告位id来加载视图 填充到所需要的位置
     private void loadBannerAd(String codeId) {
@@ -81,7 +76,7 @@ public class BannerActivity extends Activity {
 
             @Override
             public void onError(int code, String message) {
-                TToast.show(BannerActivity.this, "load error : " + code + ", " + message);
+                TToast.show(context, "load error : " + code + ", " + message);
                 mBannerContainer.removeAllViews();
 
             }
@@ -98,18 +93,20 @@ public class BannerActivity extends Activity {
                 //设置轮播的时间间隔  间隔在30s到120秒之间的值，不设置默认不轮播
                 ad.setSlideIntervalTime(30 * 1000);
                 mBannerContainer.removeAllViews();
+                Log.i("gdchent","加载banner逻辑前");
                 //也就是我现在要用RN来替换
                 mBannerContainer.addView(bannerView);
+                Log.i("gdchent","加载banner逻辑后");
                 //设置广告互动监听回调
                 ad.setBannerInteractionListener(new TTBannerAd.AdInteractionListener() {
                     @Override
                     public void onAdClicked(View view, int type) {
-                        TToast.show(mContext, "广告被点击");
+                        TToast.show(context, "广告被点击");
                     }
 
                     @Override
                     public void onAdShow(View view, int type) {
-                        TToast.show(mContext, "广告展示");
+                        TToast.show(context, "广告展示");
                     }
                 });
                 //（可选）设置下载类广告的下载监听
@@ -118,14 +115,14 @@ public class BannerActivity extends Activity {
                 ad.setShowDislikeIcon(new TTAdDislike.DislikeInteractionCallback() {
                     @Override
                     public void onSelected(int position, String value) {
-                        TToast.show(mContext, "点击 " + value);
+                        TToast.show(context, "点击 " + value);
                         //用户选择不喜欢原因后，移除广告展示
                         mBannerContainer.removeAllViews();
                     }
 
                     @Override
                     public void onCancel() {
-                        TToast.show(mContext, "点击取消 ");
+                        TToast.show(context, "点击取消 ");
                     }
                 });
 
@@ -133,11 +130,11 @@ public class BannerActivity extends Activity {
                 /*mTTAdDislike = ad.getDislikeDialog(new TTAdDislike.DislikeInteractionCallback() {
                         @Override
                         public void onSelected(int position, String value) {
-                            TToast.show(mContext, "点击 " + value);
+                            TToast.show(context, "点击 " + value);
                         }
                         @Override
                         public void onCancel() {
-                            TToast.show(mContext, "点击取消 ");
+                            TToast.show(context, "点击取消 ");
                         }
                     });
                 if (mTTAdDislike != null) {
@@ -154,40 +151,40 @@ public class BannerActivity extends Activity {
     }
 
     private boolean mHasShowDownloadActive = false;
-
     private void bindDownloadListener(TTBannerAd ad) {
+
         ad.setDownloadListener(new TTAppDownloadListener() {
             @Override
             public void onIdle() {
-                TToast.show(BannerActivity.this, "点击图片开始下载", Toast.LENGTH_LONG);
+                TToast.show(context, "点击图片开始下载", Toast.LENGTH_LONG);
             }
 
             @Override
             public void onDownloadActive(long totalBytes, long currBytes, String fileName, String appName) {
                 if (!mHasShowDownloadActive) {
                     mHasShowDownloadActive = true;
-                    TToast.show(BannerActivity.this, "下载中，点击图片暂停", Toast.LENGTH_LONG);
+                    TToast.show(context, "下载中，点击图片暂停", Toast.LENGTH_LONG);
                 }
             }
 
             @Override
             public void onDownloadPaused(long totalBytes, long currBytes, String fileName, String appName) {
-                TToast.show(BannerActivity.this, "下载暂停，点击图片继续", Toast.LENGTH_LONG);
+                TToast.show(context, "下载暂停，点击图片继续", Toast.LENGTH_LONG);
             }
 
             @Override
             public void onDownloadFailed(long totalBytes, long currBytes, String fileName, String appName) {
-                TToast.show(BannerActivity.this, "下载失败，点击图片重新下载", Toast.LENGTH_LONG);
+                TToast.show(context, "下载失败，点击图片重新下载", Toast.LENGTH_LONG);
             }
 
             @Override
             public void onInstalled(String fileName, String appName) {
-                TToast.show(BannerActivity.this, "安装完成，点击图片打开", Toast.LENGTH_LONG);
+                TToast.show(context, "安装完成，点击图片打开", Toast.LENGTH_LONG);
             }
 
             @Override
             public void onDownloadFinished(long totalBytes, String fileName, String appName) {
-                TToast.show(BannerActivity.this, "点击图片安装", Toast.LENGTH_LONG);
+                TToast.show(context, "点击图片安装", Toast.LENGTH_LONG);
             }
         });
     }

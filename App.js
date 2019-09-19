@@ -8,7 +8,8 @@
 
 import React from 'react';
 import { Platform, StyleSheet, Text, View, FlatList, TouchableOpacity, NativeModules, Dimensions } from 'react-native';
-
+import NativeTimerView from './NativeTimerView'
+import NativeBannerContainer from './NativeBannerContainer'
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
   android:
@@ -22,18 +23,30 @@ console.disableYellowBox = true
 
 type Props = {};
 export default class App extends React.PureComponent<Props> {
+
+
+  constructor(props) {
+    super(props)
+    this.state = {
+
+    }
+  }
   render() {
     return (
       <View style={styles.container}>
-
-
+        <NativeTimerView
+          stimer={50}
+        />
+        <NativeBannerContainer
+            
+         />
         <FlatList
           data={[
             { index: 0, key: 'Banner广告-->原生BannerAct' },
             { index: 1, key: '原生Banner的广告' },
           ]}
           renderItem={this.renderItem}
-          _keyExtractor = {(item, index) => index.toString() } //这里要调用toString方法 否则会抛出警告 查看控制台
+          _keyExtractor={(item, index) => index.toString()} //这里要调用toString方法 否则会抛出警告 查看控制台
           ItemSeparatorComponent={() => {
             return (
               <View style={{ width: width, height: 1, backgroundColor: 'red' }}></View>
@@ -44,8 +57,12 @@ export default class App extends React.PureComponent<Props> {
       </View>
     );
   }
+
+
+
   //渲染界面       
   renderItem = ({ item }) => {
+    //每一项的item对象
     return (
       <TouchableOpacity
         key={item.index}
@@ -69,8 +86,8 @@ export default class App extends React.PureComponent<Props> {
       let nativeObj = item
       NativeModules.AdViceModule.rnCallNative(JSON.stringify(nativeObj)); //这里注意传字符串 传对象藐视会出问题 可以一试
     }
-
   }
+
 }
 
 const styles = StyleSheet.create({
