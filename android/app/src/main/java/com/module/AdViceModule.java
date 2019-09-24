@@ -1,23 +1,17 @@
 package com.module;
 
-import android.app.NativeActivity;
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.util.Log;
 
 import com.control.BannerAdvice;
 import com.facebook.react.bridge.Callback;
-import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.union_test.toutiao.activity.BannerActivity;
 import com.union_test.toutiao.activity.FeedListActivity;
-import com.view.BannerContainerManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -91,10 +85,12 @@ public class AdViceModule extends ReactContextBaseJavaModule {
                 case 0:
                     //进行逻辑处理
                     BannerAdvice.getInstance(context).showBannerDownload();
+                    //context.startActivity(new Intent(context, BannerActivity.class));
                     break;
                 case 1:
-                    intent = new Intent(context, FeedListActivity.class);
-                    context.startActivity(intent);
+                     //原生界面本来的效果
+                    //context.startActivity(new Intent(context, FeedListActivity.class));
+                    BannerAdvice.getInstance(context).showBannerLandingpage();
                     break;
             }
 

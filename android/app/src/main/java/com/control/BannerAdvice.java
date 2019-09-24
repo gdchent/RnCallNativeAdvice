@@ -3,8 +3,12 @@ package com.control;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bytedance.sdk.openadsdk.AdSlot;
@@ -12,10 +16,13 @@ import com.bytedance.sdk.openadsdk.TTAdDislike;
 import com.bytedance.sdk.openadsdk.TTAdNative;
 import com.bytedance.sdk.openadsdk.TTAppDownloadListener;
 import com.bytedance.sdk.openadsdk.TTBannerAd;
+import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.uimanager.ThemedReactContext;
 import com.rncallnativeadvice.RnActivity;
 import com.union_test.toutiao.activity.BannerActivity;
 import com.union_test.toutiao.config.TTAdManagerHolder;
 import com.union_test.toutiao.utils.TToast;
+import com.view.BannerLinearLayout;
 
 //第一种广告类型
 public class BannerAdvice {
@@ -23,22 +30,23 @@ public class BannerAdvice {
     private static BannerAdvice bannerAdvice;
     private static TTAdNative mTTAdNative;
     private static TTAdDislike mTTAdDislike;
-    private static Context context;
-    private static FrameLayout mBannerContainer;
+    private static ReactContext context;
+    private static BannerLinearLayout mBannerContainer;
     //也就说RN调用的时候 这个是要执行的第一步 初始化这些东西
-    private BannerAdvice(Context context) {
+    private BannerAdvice(ReactContext context) {
         this.context=context ;
-        mBannerContainer=new FrameLayout(context);
+        mBannerContainer=new BannerLinearLayout(context);
         mBannerContainer.setBackgroundColor(Color.GREEN);
         //step2:创建TTAdNative对象，createAdNative(Context context) banner广告context需要传入Activity对象
         //mTTAdNative = TTAdManagerHolder.get().createAdNative(context);
         mTTAdNative= RnActivity.mTTAdNative ;//由于这里不需要展示视图 而上下文必须是Activity 所以这里直接放到RnActivity
         //step3:(可选，强烈建议在合适的时机调用):申请部分权限，如read_phone_state,防止获取不了imei时候，下载类广告没有填充的问题。
         TTAdManagerHolder.get().requestPermissionIfNecessary(context);
+
     }
 
     //暴露出一个单例对象
-    public static BannerAdvice getInstance(Context context){
+    public static BannerAdvice getInstance(ReactContext context){
          if(bannerAdvice==null){
              bannerAdvice=new BannerAdvice(context);
          }
@@ -46,14 +54,10 @@ public class BannerAdvice {
     }
 
     //暴露Framelayout
-    public FrameLayout getBannerContainer(){
+    public BannerLinearLayout getBannerContainer(){
         return mBannerContainer;
     }
 
-    //在原生把事情做完之后 需要暴露给RN视图界面 这里是最后的逻辑
-    public  void showBannerToRn(){
-
-    }
     //显示下载类广告 RN那边触发这种类型广告
     public void showBannerDownload(){
         loadBannerAd("901121895");
@@ -77,8 +81,12 @@ public class BannerAdvice {
             @Override
             public void onError(int code, String message) {
                 TToast.show(context, "load error : " + code + ", " + message);
-                mBannerContainer.removeAllViews();
-
+                context.getCurrentActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mBannerContainer.removeAllViews();
+                    }
+                });
             }
 
             @Override
@@ -92,11 +100,26 @@ public class BannerAdvice {
                 }
                 //设置轮播的时间间隔  间隔在30s到120秒之间的值，不设置默认不轮播
                 ad.setSlideIntervalTime(30 * 1000);
-                mBannerContainer.removeAllViews();
-                Log.i("gdchent","加载banner逻辑前");
-                //也就是我现在要用RN来替换
-                mBannerContainer.addView(bannerView);
-                Log.i("gdchent","加载banner逻辑后");
+
+                context.getCurrentActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mBannerContainer.removeAllViews();
+                        mBannerContainer.setOrientation(LinearLayout.VERTICAL);
+                        //就是子View你自己要设置多大
+                        LinearLayout.LayoutParams ll = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                        bannerView.setLayoutParams(ll);
+                        Log.i("gdchent","加载banner逻辑前");
+//                        TextView textView = new TextView(context.getCurrentActivity());
+//                        textView.setText("Hello");
+//                        textView.setGravity(Gravity.CENTER);
+//                        textView.setTextColor(Color.RED);
+                        //也就是我现在要用RN来替换
+                        mBannerContainer.addView(bannerView);
+                        Log.i("gdchent","加载banner逻辑后");
+                    }
+                });
+
                 //设置广告互动监听回调
                 ad.setBannerInteractionListener(new TTBannerAd.AdInteractionListener() {
                     @Override
@@ -117,7 +140,13 @@ public class BannerAdvice {
                     public void onSelected(int position, String value) {
                         TToast.show(context, "点击 " + value);
                         //用户选择不喜欢原因后，移除广告展示
-                        mBannerContainer.removeAllViews();
+                        context.getCurrentActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mBannerContainer.removeAllViews();
+
+                            }
+                        });
                     }
 
                     @Override
@@ -125,26 +154,6 @@ public class BannerAdvice {
                         TToast.show(context, "点击取消 ");
                     }
                 });
-
-                //获取网盟dislike dialog，您可以在您应用中本身自定义的dislike icon 按钮中设置 mTTAdDislike.showDislikeDialog();
-                /*mTTAdDislike = ad.getDislikeDialog(new TTAdDislike.DislikeInteractionCallback() {
-                        @Override
-                        public void onSelected(int position, String value) {
-                            TToast.show(context, "点击 " + value);
-                        }
-                        @Override
-                        public void onCancel() {
-                            TToast.show(context, "点击取消 ");
-                        }
-                    });
-                if (mTTAdDislike != null) {
-                    XXX.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mTTAdDislike.showDislikeDialog();
-                        }
-                    });
-                } */
 
             }
         });

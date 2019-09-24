@@ -1,4 +1,4 @@
-package com.view;
+package com.viewmanager;
 
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
+import com.view.TimerView;
 
 import javax.annotation.Nonnull;
 

@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bytedance.sdk.openadsdk.AdSlot;
@@ -38,6 +40,7 @@ public class BannerActivity extends Activity {
                 | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
         setContentView(R.layout.activity_banner);
+
         mContext = this.getApplicationContext();
         mBannerContainer = (FrameLayout) findViewById(R.id.banner_container);
         mButtonDownload = (Button) findViewById(R.id.btn_banner_download);
@@ -98,6 +101,9 @@ public class BannerActivity extends Activity {
                 //设置轮播的时间间隔  间隔在30s到120秒之间的值，不设置默认不轮播
                 ad.setSlideIntervalTime(30 * 1000);
                 mBannerContainer.removeAllViews();
+//                TextView textView = new TextView(mContext);
+//                FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+//                textView.setText("装个逼");
                 //也就是我现在要用RN来替换
                 mBannerContainer.addView(bannerView);
                 //设置广告互动监听回调

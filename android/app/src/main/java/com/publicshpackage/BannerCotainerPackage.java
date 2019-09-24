@@ -4,8 +4,7 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
-import com.view.BannerContainerManager;
-import com.view.TimerViewManager;
+import com.viewmanager.BannerContainerManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
